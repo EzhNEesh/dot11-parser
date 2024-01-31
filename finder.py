@@ -1,9 +1,10 @@
-from frame_parser import crc_32_compare
+from frame_parser import crc_32_compare, validate_frame_subtype
 
 
 class Finder:
     def __init__(self):
         self.frames = {}
+        self.frames_unvalidated = {}
         self.frames_malformed = {}
 
     def parse_data(self, file_path: str):
@@ -20,9 +21,13 @@ class Finder:
                         'MCS': frame_data[2][4:],
                         'size': frame_data[3][5:],
                         'bits': bits,
-                        'crc': bits[-1] + bits[-2] + bits[-3] + bits[-4]
+                        'crc': bits[-1] + bits[-2] + bits[-3] + bits[-4],
+                        'subtype': validate_frame_subtype(bits[0])
                     }
-                    self.frames[line[:10]] = current_frame
+                    if current_frame['subtype'] == 'Beacon':
+                        self.frames[line[:10]] = current_frame
+                    else:
+                        self.frames_unvalidated[line[:10]] = current_frame
                 else:
                     current_frame = {
                         'offset': frame_data[0][7:],
@@ -32,6 +37,10 @@ class Finder:
                         'bits': bits
                     }
                     self.frames_malformed[line[:10]] = current_frame
+
+            for ind, val in self.frames.items():
+                print(ind, val)
+            print(len(self.frames))
 
 
 finder = Finder()

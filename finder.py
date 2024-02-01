@@ -1,4 +1,5 @@
 from frame_parser import crc_32_compare, validate_frame_subtype
+import re
 
 
 class Finder:
@@ -38,10 +39,16 @@ class Finder:
                     }
                     self.frames_malformed[line[:10]] = current_frame
 
-            for ind, val in self.frames.items():
-                print(ind, val)
-            print(len(self.frames))
+    def search(self):
+        for ind, frame in self.frames.items():
+            ssid_length = int(frame['bits'][37], 16)
+            ssid = ''.join(frame['bits'][38:38 + ssid_length])
+            ssid_str = bytes.fromhex(ssid).decode('utf-8')
+            res = re.search('.*drone.*', ssid_str.lower())
+            if res:
+                print(res[0])
 
 
 finder = Finder()
 finder.parse_data('data/frames_phy.log')
+finder.search()

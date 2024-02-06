@@ -1,3 +1,5 @@
+import re
+
 frame_types = {
     '00': 'Association request',
     '20': 'Reassociation request',
@@ -45,3 +47,7 @@ frame_types = {
 
 def validate_frame_subtype(frame_control_field: str) -> str:
     return frame_types[frame_control_field]
+
+
+def is_drone(ssid):
+    return re.search('.*drone.*', ssid.lower()) is not None

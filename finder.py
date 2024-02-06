@@ -51,7 +51,7 @@ class Finder:
         mac_addresses = self.frames[self.frames['is_drone'].notna()]['MAC_Source'].unique()
         with open(file_path, 'w') as file:
             for mac_address in mac_addresses:
-                file.write(f'mac_address:\n')
+                file.write(f'[{mac_address}]:\n')
                 output_res = self.frames[self.frames['MAC_Source'] == mac_address][[
                     'offset',
                     'BW',

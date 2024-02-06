@@ -42,10 +42,29 @@ class Finder:
                     self.frames['bits'].loc[ind][38:38+ssid_length]
                 )).decode('utf-8')
 
-            self.frames.loc[ind, 'is_drone'] = is_drone(ssid)
-        print(self.frames)
-        
+            is_drone_res = self.frames.loc[ind, 'is_drone'] = is_drone(ssid)
+
+            if is_drone_res:
+                self.frames.loc[ind, 'MAC_Source'] = ':'.join(self.frames['bits'].loc[ind][10:16])
+
+    def save_to_file(self, file_path='results/drones_frames'):
+        mac_addresses = self.frames[self.frames['is_drone'].notna()]['MAC_Source'].unique()
+        with open(file_path, 'w') as file:
+            for mac_address in mac_addresses:
+                file.write(f'mac_address:\n')
+                output_res = self.frames[self.frames['MAC_Source'] == mac_address][[
+                    'offset',
+                    'BW',
+                    'MCS',
+                    'size',
+                    'ssid',
+                    'MAC_Source'
+                ]]
+                file.write(tabulate(output_res, headers='keys', tablefmt='psql'))
+                file.write('\n\n')
+
 
 finder = Finder()
 finder.parse_data('data/frames_phy.log')
 finder.search()
+finder.save_to_file()

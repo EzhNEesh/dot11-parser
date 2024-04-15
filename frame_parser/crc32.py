@@ -34,7 +34,7 @@ crc_table = [
 ]
 
 
-def crc_32(bits: list[str]):
+def crc_32(bits):
     crc = 0xffffffff
 
     for byte in bits:
@@ -44,7 +44,7 @@ def crc_32(bits: list[str]):
     return crc ^ 0xffffffff
 
 
-def crc_32_compare(bits: list[str]) -> bool:
+def crc_32_compare(bits) -> bool:
     crc_calculated = hex(crc_32(bits[:-4]))
     crc_calculated = crc_calculated[:2] + '0' * (8 - len(crc_calculated[2:])) + crc_calculated[2:]
 

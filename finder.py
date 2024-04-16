@@ -2,10 +2,9 @@ import pandas as pd
 from tabulate import tabulate
 import sys
 from scapy.layers.dot11 import Dot11
-from meow import NetworkGraph
+from graph_visualisation.network_graph import NetworkGraph
 
 from frame_parser import crc_32_compare, validate_frame_subtype, is_drone, hex_decoder
-
 
 
 class SysArgvParser:
@@ -45,7 +44,7 @@ class Finder:
             for line in file:
                 frame_data = line[11:].split(',')
                 bits_buf = frame_data[4][5:-1]
-                bits = [bits_buf[byte:byte+2] for byte in range(0, len(bits_buf), 2)]
+                bits = [bits_buf[byte:byte + 2] for byte in range(0, len(bits_buf), 2)]
 
                 if crc_32_compare(bits):
                     current_frame = {'offset': frame_data[0][7:],
@@ -102,29 +101,7 @@ class Finder:
     def draw_graph(self):
         ng = NetworkGraph()
         ng.draw_graph(self.frames[['src_address', 'dst_address', 'is_drone']], self.drone_addresses)
-        # with open(file_path + '_1', 'w') as file:
-        #     for ind, row in self.frames.iterrows():
-        #         print(row)
-                # file.write(f'[{mac_address}]:\n')
-                # output_res = self.frames[self.frames['MAC_Source'] == mac_address][[
-                #     'offset',
-                #     'BW',
-                #     'MCS',
-                #     'size',
-                #     'ssid',
-                #     'MAC_Source'
-                # ]]
 
-                # output_res = row[[
-                #     'offset',
-                #     'BW',
-                #     'MCS',
-                #     'size',
-                #     'ssid',
-                #     'MAC_Source'
-                # ]]
-                # file.write(tabulate(output_res, headers='keys', tablefmt='psql'))
-                # file.write('\n\n')
 
 argv_parser = SysArgvParser()
 argv_results = argv_parser.parse_argv(sys.argv)

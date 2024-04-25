@@ -13,7 +13,7 @@ class SysArgvParser:
             self.print_help()
             return [False]
 
-        return_list = [True, 'data/frames_phy.log', 'results/drones_frames', ""]
+        return_list = [True, argv_list[1], 'results/drones_frames', ""]
         for i in range(2, len(argv_list), 2):
             if argv_list[i] in {'-o', '--output'}:
                 return_list[2] = argv_list[i + 1]
@@ -71,9 +71,10 @@ class Finder:
                 ssid = self.frames.loc[ind, 'ssid'] = row['Dot11'].info.decode("utf-8")
                 if is_drone(ssid) or ssid == search_ssid:
                     self.frames.loc[ind, 'is_drone'] = True
-                    suspicious_addresses.append({'address': src_address, 'ssid': ssid})
-                    suspicious_addresses.append({'address': dst_address, 'ssid': ssid})
-
+                    if src_address != 'ff:ff:ff:ff:ff:ff':
+                        suspicious_addresses.append({'address': src_address, 'ssid': ssid})
+                    if dst_address != 'ff:ff:ff:ff:ff:ff':
+                        suspicious_addresses.append({'address': dst_address, 'ssid': ssid})
         self.suspicious_addresses = pd.DataFrame(suspicious_addresses)
         suspicious_addresses_grouped = (self.suspicious_addresses
                                         .groupby('ssid', as_index=False)
@@ -103,11 +104,11 @@ class Finder:
         ng.draw_graph(self.frames[['src_address', 'dst_address', 'is_drone']], self.drone_addresses)
 
 
-argv_parser = SysArgvParser()
-argv_results = argv_parser.parse_argv(sys.argv)
-if argv_results[0]:
-    finder = Finder()
-    finder.parse_data(argv_results[1])
-    finder.search(argv_results[3])
-    finder.save_to_file(argv_results[2])
-    finder.draw_graph()
+# argv_parser = SysArgvParser()
+# argv_results = argv_parser.parse_argv(sys.argv)
+# if argv_results[0]:
+#     finder = Finder()
+#     finder.parse_data(argv_results[1])
+#     finder.search(argv_results[3])
+#     finder.save_to_file(argv_results[2])
+#     finder.draw_graph()

@@ -1,8 +1,7 @@
 .idea/
 data/
 results/
-*/__pycache__/
-/__pycache__/
+**/__pycache__/
 */meow.py
 */meown.py
 */finder.py

@@ -7,7 +7,7 @@ from .networking.network_graph import NetworkGraph
 def main(page: ft.Page):
     handler = Handler()
     network_graph = NetworkGraph()
-    page.title = "Drone finder"
+    page.title = "Drone detector"
     action_container = ft.Container()
 
     input_path = ft.TextField(label="Enter path to input data file", width=300, height=35, text_size=14)
@@ -84,9 +84,10 @@ def main(page: ft.Page):
     #     page.update()
 
     rg = ft.RadioGroup(content=ft.Column([
-        ft.Radio(value="Predict", label="Predict"),
+        ft.Radio(value="Find", label="Find"),
         ft.Radio(value="Retrain", label="Retrain"),
-        ft.Radio(value="Incremental train", label="Incremental train")]), on_change=radiogroup_changed)
+        ft.Radio(value="Incremental train", label="Incremental train")
+    ]), on_change=radiogroup_changed)
     page.add(rg)
     page.add(action_container)
 

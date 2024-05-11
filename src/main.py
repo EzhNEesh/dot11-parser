@@ -69,7 +69,7 @@ def main(page: ft.Page):
 
     def radiogroup_changed(e):
         match e.control.value:
-            case 'Predict':
+            case 'Find':
                 add_predict_to_page()
             case 'Retrain':
                 add_retrain_to_page()

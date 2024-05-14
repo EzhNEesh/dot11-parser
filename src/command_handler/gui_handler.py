@@ -1,6 +1,7 @@
 from ..networking.dot11_frames import Dot11DataFrame, Vectorizer
 from ..ml_models.models import ModelManager
 from tabulate import tabulate
+import os
 
 import numpy as np
 
@@ -29,15 +30,17 @@ class Handler:
         control_devices = dot11_dataframe.get_control_devices(macs)
         return macs, control_devices
 
-    def retrain_model(self, model_name, paths_to_datas, drones_addresses):
+    def retrain_model(self, model_name, directory, macs_file):
         train_data = np.empty((0, 8), int)
         mac_addresses = np.empty((0, 1), int)
-        for path in paths_to_datas[:-1]:
-            dot11_dataframe = self.read_frames(path)
+        paths_to_datas = os.listdir(directory)
+        drones_addresses = Dot11DataFrame.read_macs_from_file(macs_file)
+
+        for path in paths_to_datas:
+            dot11_dataframe = self.read_frames(directory + '/' + path)
             vectors, macs = Vectorizer().vectorize_frames(dot11_dataframe)
             train_data = np.append(train_data, np.array(vectors), axis=0)
             mac_addresses = np.append(mac_addresses, macs)
-
         train_results = np.empty((0, 1), int)
         for mac in mac_addresses:
             train_results = np.append(train_results, mac in drones_addresses)

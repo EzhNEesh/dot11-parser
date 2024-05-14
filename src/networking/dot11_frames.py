@@ -1,6 +1,7 @@
 from scapy.layers.dot11 import Dot11
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import MinMaxScaler
 
 from src.networking.crc32 import crc_32_compare
 
@@ -82,6 +83,14 @@ class Dot11DataFrame:
             if val:
                 result.append(macs[i])
         return result
+
+    @staticmethod
+    def read_macs_from_file(filepath):
+        macs = []
+        with open(filepath, 'r') as file:
+            for line in file:
+                macs.append(line)
+        return macs
 
 
 class Vectorizer:

@@ -66,10 +66,9 @@ def main(page: ft.Page):
             handler.save_to_file(dot11_dataframe, macs)
 
     def retrain_model(e):
-        paths = paths_to_datas.value.split('\n')
-        drones = drone_addresses.value.split('\n')
+        # drones = drone_addresses.value.split('\n')
         try:
-            handler.retrain_model(rg_models.value, paths, drones)
+            handler.retrain_model(rg_models.value, paths_to_datas.value, drone_addresses.value)
         except ValueError:
             open_dlg(f'File does not exits or invalid data')
             return
@@ -132,9 +131,9 @@ def main(page: ft.Page):
                         disabled=True, on_change=update_find_button)
     ssid_radio = ft.Radio(value="ssid", label="By ssid", visible=False)
 
-    paths_to_datas = ft.TextField(label="Enter paths to data files with line break*", multiline=True,
+    paths_to_datas = ft.TextField(label="Enter path to directory with frames files*",
                                   on_change=update_retrain_button)
-    drone_addresses = ft.TextField(label="Enter MAC addresses with line break*", multiline=True,
+    drone_addresses = ft.TextField(label="Enter path to file with MAC-addresses of drones*",
                                    on_change=update_retrain_button)
     rg_models = ft.RadioGroup(content=ft.Column([
         ft.Radio(value="knn", label="K-Neighbors Classifier"),

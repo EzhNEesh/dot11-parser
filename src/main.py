@@ -19,12 +19,6 @@ def main(page: ft.Page):
         page.dialog = dlg_modal
         dlg_modal.open = True
         page.update()
-        # dlg = ft.AlertDialog(
-        #     title=ft.Text(message), on_dismiss=lambda e: print("Dialog dismissed!")
-        # )
-        # page.dialog = dlg
-        # dlg.open = True
-        # page.update()
 
     def update_find_button(e):
         if rg_models.value is not None and (rg_models.value != 'ssid' or rg_models.value == 'ssid' and len(ssid.value))\
@@ -66,7 +60,6 @@ def main(page: ft.Page):
             handler.save_to_file(dot11_dataframe, macs)
 
     def retrain_model(e):
-        # drones = drone_addresses.value.split('\n')
         try:
             handler.retrain_model(rg_models.value, paths_to_datas.value, drone_addresses.value)
         except ValueError:

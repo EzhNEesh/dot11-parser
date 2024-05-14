@@ -64,7 +64,8 @@ class Dot11DataFrame:
                 .iloc[0]
                 ['dst_address']
             )
-            return control_devices
+
+        return control_devices
 
     def get_drones_by_ssid(self, ssid):
         macs = []
@@ -89,7 +90,7 @@ class Dot11DataFrame:
         macs = []
         with open(filepath, 'r') as file:
             for line in file:
-                macs.append(line)
+                macs.append(line.strip('\n'))
         return macs
 
 
@@ -105,12 +106,18 @@ class Vectorizer:
         return vector
 
     def vectorize_frames(self, dot11_frames):
+        scaler = MinMaxScaler()
         vectors = []
         macs = []
         for mac, group in dot11_frames.frames.groupby(['src_address']):
             vector = self.vectorize_frame(group)
             vectors.append(vector)
             macs.append(mac[0])
-        vectors = np.array(vectors)
+        # vectors_std = np.array(vectors)
+        # scaler.fit(vectors_std)
+        scaler = MinMaxScaler()
+        scaler.fit(vectors)
+        vectors = scaler.transform(vectors)
+
         macs = macs
         return vectors, macs

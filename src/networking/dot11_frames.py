@@ -42,7 +42,6 @@ class Dot11DataFrame:
                         'retry': dot11.FCfield & 0x4 != 0,
                         'protected': dot11.FCfield & 0x7 != 0,
                         'order': dot11.FCfield & 0x8 != 0,  # +HTC/order(+-)
-                        'Dot11': dot11,
                         'src_address': dot11.addr2,
                         'dst_address': dot11.addr1,
                     }

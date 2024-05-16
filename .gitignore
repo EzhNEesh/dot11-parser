@@ -3,6 +3,6 @@ data/
 results/
 __pycache__/
 **/__pycache__/
-meow.py
+/meow.py
 src/meown.py
 */finder.py

@@ -62,7 +62,7 @@ def main(page: ft.Page):
     def retrain_model(e):
         try:
             handler.retrain_model(rg_models.value, paths_to_datas.value, drone_addresses.value)
-        except ValueError:
+        except (ValueError, FileNotFoundError):
             open_dlg(f'File does not exits or invalid data')
             return
         except TypeError:
@@ -116,8 +116,12 @@ def main(page: ft.Page):
 
     input_path = ft.TextField(label="Enter path to input data file",
                               width=300, height=35,
-                              text_size=14, on_change=update_find_button)
-    output_path = ft.TextField(label="Enter path to output file", value="", width=300, height=35, text_size=14)
+                              text_size=14, on_change=update_find_button,
+                              content_padding=ft.Padding(left=5, top=3, right=5, bottom=3))
+    output_path = ft.TextField(label="Enter path to output file", value="",
+                               width=300, height=35,
+                               text_size=14,
+                               content_padding=ft.Padding(left=5, top=3, right=5, bottom=3))
 
     ssid = ft.TextField(label="Enter ssid for search", value="",
                         width=300, height=35, text_size=14,
@@ -125,9 +129,11 @@ def main(page: ft.Page):
     ssid_radio = ft.Radio(value="ssid", label="By ssid", visible=False)
 
     paths_to_datas = ft.TextField(label="Enter path to directory with frames files*",
-                                  on_change=update_retrain_button)
+                                  on_change=update_retrain_button,
+                                  content_padding=ft.Padding(left=5, top=3, right=5, bottom=3))
     drone_addresses = ft.TextField(label="Enter path to file with MAC-addresses of drones*",
-                                   on_change=update_retrain_button)
+                                   on_change=update_retrain_button,
+                                   content_padding=ft.Padding(left=5, top=3, right=5, bottom=3))
     rg_models = ft.RadioGroup(content=ft.Column([
         ft.Radio(value="knn", label="K-Neighbors Classifier"),
         ft.Radio(value="logistic_regression", label="Logistic Regression"),
@@ -138,7 +144,7 @@ def main(page: ft.Page):
     rg = ft.RadioGroup(content=ft.Column([
         ft.Radio(value="Find", label="Find"),
         ft.Radio(value="Retrain", label="Retrain"),
-        ft.Radio(value="Incremental train", label="Incremental train")
+        # ft.Radio(value="Incremental train", label="Incremental train")
     ]), on_change=rg_action_changed)
     page.add(rg)
     page.add(action_container)
